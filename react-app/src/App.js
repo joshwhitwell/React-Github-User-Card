@@ -1,8 +1,6 @@
 import React from 'react'
 import axios from 'axios'
 
-import './App.css'
-
 import UserCard from './components/UserCard'
 import Followers from './components/Followers'
 
@@ -15,26 +13,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    console.log('mount')
-    axios.get(`https://api.github.com/users/${this.state.currentUser}`)
-      .then(res => {
-        console.log('axios 1')
-        this.setState({ user: res.data })
-        return res.data.followers_url
-      })
-      .then(res => {
-        axios.get(res)
-          .then(res => {
-            console.log('axios 2')
-            this.setState({ followers: res.data })
-          })
-          .catch(err => {
-            console.log(err)
-          })
-      })
-      .catch(err => {
-        console.log(err)
-      })
+    this.getUser()
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -46,7 +25,6 @@ class App extends React.Component {
   getUser = () => {
     axios.get(`https://api.github.com/users/${this.state.currentUser}`)
       .then(res => {
-        console.log('axios 3')
         this.setState({ user: res.data })
         return res.data.followers_url
       })
@@ -81,9 +59,10 @@ class App extends React.Component {
         <h1>Github User Cards</h1>
         <form onSubmit={this.submitHandler}>
           <input type='text' value={this.state.searchValue} onChange={this.changeHandler}/>
-          <button>Search</button>
+          <button>SEARCH</button>
         </form>
         <UserCard user={this.state.user} />
+        <h2 className='section-title'>Followers</h2>
         <Followers followers={this.state.followers} user={this.state.user.name}/>
       </div>
     )
